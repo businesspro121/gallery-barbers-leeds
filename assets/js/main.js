@@ -62,13 +62,6 @@
     /* Opening hours — rendered from config so there is one source of truth. */
     renderHours();
 
-    /* Booking-mode wording in the aside. */
-    var how = $('#howItWorks');
-    if (how && CFG.booking && CFG.booking.mode === 'endpoint') {
-      how.textContent = 'This form sends your request straight to the shop’s booking ' +
-        'system. You’ll get a reply confirming the exact time.';
-    }
-
     var y = new Date().getFullYear();
     ['year', 'mapYear'].forEach(function (id) {
       var el = doc.getElementById(id);
@@ -77,9 +70,9 @@
   }
 
   function renderHours() {
-    var list = $('#hoursList');
+    var lists = $$('#hoursList, #hoursListAside');
     var h = CFG.hours;
-    if (!list || !h) return;
+    if (!lists.length || !h) return;
 
     var days = [
       ['mon', 'Monday'], ['tue', 'Tuesday'], ['wed', 'Wednesday'],
@@ -100,15 +93,13 @@
       else { run = { key: key, start: d[1], end: d[1], val: v }; rows.push(run); }
     });
 
-    list.innerHTML = '';
-    rows.forEach(function (r) {
-      var row = doc.createElement('div');
-      row.className = 'hours__row' + (r.val ? '' : ' is-closed');
+    var html = rows.map(function (r) {
       var label = r.start === r.end ? r.start : r.start + ' – ' + r.end;
       var value = r.val ? fmt(r.val[0]) + ' – ' + fmt(r.val[1]) : 'Closed';
-      row.innerHTML = '<span>' + label + '</span><span>' + value + '</span>';
-      list.appendChild(row);
-    });
+      return '<div class="hours__row' + (r.val ? '' : ' is-closed') + '">' +
+             '<span>' + label + '</span><span>' + value + '</span></div>';
+    }).join('');
+    lists.forEach(function (list) { list.innerHTML = html; });
   }
 
   /* ═══════════════════════════════════════════════════════ 2. HEADER ═════ */

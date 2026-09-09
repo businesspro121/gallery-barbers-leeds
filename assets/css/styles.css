@@ -168,27 +168,6 @@ section[id] { scroll-margin-top:calc(var(--header-h) + 1rem); }
 .section--ivory .section-lede { color:var(--ivory-mute); }
 .section-head { margin-bottom:var(--sp-7); }
 
-/* --------------------------------------------------------------- editable - */
-/* Marks copy the shop still has to confirm. Visible, quiet, and easy to grep. */
-.editable {
-  border-bottom:1px dashed var(--gold-a40);
-  cursor:help;
-}
-.tag {
-  display:inline-flex; align-items:center; gap:.4rem;
-  padding:.3rem .65rem; border-radius:var(--radius-pill);
-  font-family:var(--font-sans); font-size:.68rem; font-weight:700;
-  letter-spacing:.13em; text-transform:uppercase; line-height:1;
-  border:1px solid var(--gold-a40); color:var(--gold);
-  background:var(--gold-a12);
-}
-.section--ivory .tag { color:var(--gold-ink); border-color:rgba(122,96,48,.4); background:rgba(122,96,48,.08); }
-.tag--demo { color:var(--gold-bright); }
-.tag--dot::before {
-  content:""; width:6px; height:6px; border-radius:50%;
-  background:currentColor; flex:none;
-}
-
 /* ---------------------------------------------------------------- buttons - */
 .btn {
   --btn-bg:transparent; --btn-fg:var(--ivory); --btn-bd:var(--ink-500);
@@ -420,6 +399,24 @@ html[data-motion="full"] .hero__scroll::after { animation:scroll-pulse 2.4s var(
 @media (min-width:900px){ .hero__scroll { display:inline-flex; flex-direction:column; } }
 @media (min-width:640px){ .hero__actions .btn { flex:0 1 auto; } }
 
+/* The woven cape, layered over the hero photograph. Fades in only once the
+   simulation has settled — see assets/js/hero-cloth.js. */
+.hero__cloth {
+  position:absolute; inset:0; z-index:-2;
+  width:100%; height:100%; display:block; pointer-events:none;
+  opacity:0;
+}
+html[data-motion="full"] .hero__cloth { transition:opacity 1.1s var(--ease-out); }
+.hero.has-cloth .hero__cloth { opacity:1; }
+/* With the cape present the photograph becomes a dim underlayer. */
+.hero.has-cloth .hero__media { opacity:.62; transition:opacity 1.1s var(--ease-out); }
+/* On a phone the cape lands directly behind the headline, so it drops back to
+   pure texture and the photograph carries more of the frame. */
+@media (max-width:700px){
+  .hero.has-cloth .hero__cloth { opacity:.5; }
+  .hero.has-cloth .hero__media { opacity:.82; }
+}
+
 /* --------------------------------------------------------------- marquee - */
 .strip {
   border-block:1px solid var(--ink-600);
@@ -470,13 +467,6 @@ html[data-motion="full"] .strip__track { animation:marquee 42s linear infinite; 
 }
 
 /* -------------------------------------------------------------- services - */
-.svc__note {
-  display:flex; flex-wrap:wrap; align-items:center; gap:var(--sp-3);
-  padding:var(--sp-4) var(--sp-5); margin-bottom:var(--sp-6);
-  border:1px dashed rgba(122,96,48,.45); border-radius:var(--radius);
-  background:rgba(122,96,48,.06);
-  font-size:var(--step--1); color:var(--ivory-mute);
-}
 .svc__cat + .svc__cat { margin-top:var(--sp-8); }
 .svc__cat-head {
   display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between;
@@ -735,33 +725,16 @@ html[data-motion="reduced"] .spinner { animation-duration:1.6s !important; }
 .stars-lg { display:inline-flex; gap:.15rem; color:var(--gold); margin-bottom:var(--sp-4); }
 .stars-lg svg { width:1.5rem; height:1.5rem; }
 
-.gplaces {
-  border:1px dashed var(--ink-500); border-radius:var(--radius-lg);
-  padding:var(--sp-5); background:var(--ink-850);
+.reviews__figure { margin:0; }
+.reviews__figure img {
+  width:100%; border-radius:var(--radius-lg); border:1px solid var(--ink-600);
 }
-.gplaces__head { display:flex; flex-wrap:wrap; gap:var(--sp-3); align-items:center; margin-bottom:var(--sp-4); }
-.gplaces__head h3 { font-size:var(--step-1); }
-.gplaces ol { display:grid; gap:.55rem; margin-top:var(--sp-4); counter-reset:s; }
-.gplaces li {
-  /* padding + absolute marker, NOT a grid: any inline <strong>/<code> in the
-     item would become its own grid item and scatter across the tracks. */
-  position:relative; padding-left:2.3rem;
-  font-size:var(--step--1); color:var(--stone-300); counter-increment:s;
+.reviews__figure figcaption {
+  margin-top:var(--sp-3); font-size:var(--step--1); color:var(--stone-400);
 }
-.gplaces li::before {
-  content:counter(s); position:absolute; left:0; top:.05rem;
-  display:grid; place-items:center;
-  width:1.6rem; height:1.6rem; border-radius:50%;
-  background:var(--ink-700); color:var(--gold); font-size:.7rem; font-weight:700;
+.reviews__attrib {
+  margin-top:var(--sp-6); font-size:.75rem; color:var(--stone-400); max-width:46ch;
 }
-.gplaces code {
-  font-size:.82em; background:var(--ink-700); padding:.1rem .35rem;
-  border-radius:4px; color:var(--gold-bright);
-}
-.gplaces__skeleton { display:grid; gap:.6rem; margin-top:var(--sp-4); }
-.skel { height:.7rem; border-radius:4px; background:linear-gradient(90deg,var(--ink-700),var(--ink-600),var(--ink-700)); background-size:200% 100%; }
-html[data-motion="full"] .skel { animation:shimmer 2.2s ease-in-out infinite; }
-@keyframes shimmer { to { background-position:-200% 0; } }
 @media (min-width:900px){
   .reviews__grid { grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:var(--sp-8); }
 }
@@ -814,20 +787,6 @@ html[data-motion="full"] .tile { transition:opacity var(--dur-3) var(--ease), fi
 .tile__btn:hover .tile__cap,.tile__btn:focus-visible .tile__cap { opacity:1; translate:0; }
 @media (hover:none){ .tile__cap { opacity:1; translate:0; } }
 .tile__cap em { font-style:normal; font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--gold); }
-
-/* placeholder tiles the shop swaps for real photos */
-.tile--ph .tile__btn { cursor:default; border-style:dashed; }
-.tile--ph .ph {
-  display:grid; place-items:center; gap:.55rem; text-align:center;
-  aspect-ratio:4/5; padding:1rem;
-  background:
-    repeating-linear-gradient(45deg,rgba(198,161,91,.05) 0 10px,transparent 10px 20px),
-    var(--ink-750);
-  color:var(--stone-400);
-}
-.tile--ph .ph svg { width:1.7rem; height:1.7rem; color:var(--gold-a40); }
-.tile--ph .ph b { font-size:.8rem; font-weight:600; color:var(--stone-300); }
-.tile--ph .ph span { font-size:.72rem; max-width:16rem; }
 
 .gallery__empty { padding:var(--sp-7) 0; text-align:center; color:var(--stone-400); }
 
@@ -931,16 +890,33 @@ html[data-motion="full"] .lightbox[open] { animation:lb-in var(--dur-3) var(--ea
 .social-link svg { width:1.2rem; height:1.2rem; }
 @media (hover:hover){ .social-link:hover { transform:translateY(-2px); border-color:var(--gold-a40); background:rgba(255,255,255,.05); color:var(--gold-bright); } }
 .social-link:active { transform:translateY(0) scale(.98); }
-.social-link--todo { border-style:dashed; color:var(--stone-400); cursor:not-allowed; }
-.social-link--todo:hover { transform:none; color:var(--stone-400); }
 
-.ig-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(7rem,1fr)); gap:.6rem; margin-top:var(--sp-5); }
-.ig-cell {
-  aspect-ratio:1; border-radius:var(--radius); border:1px dashed var(--ink-500);
-  display:grid; place-items:center; color:var(--ink-500);
-  background:repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 10px,transparent 10px 20px);
+.ig-grid {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:.6rem;
+  margin-top:var(--sp-6);
 }
-.ig-cell svg { width:1.4rem; height:1.4rem; }
+@media (min-width:620px){ .ig-grid { grid-template-columns:repeat(3,1fr); } }
+@media (min-width:900px){ .ig-grid { grid-template-columns:repeat(6,1fr); } }
+.ig-cell {
+  position:relative; display:block; overflow:hidden;
+  aspect-ratio:1; border-radius:var(--radius);
+  border:1px solid var(--ink-600); background:var(--ink-700);
+  transition:border-color var(--dur-2) var(--ease), transform var(--dur-3) var(--ease-out);
+}
+.ig-cell img { width:100%; height:100%; object-fit:cover; transition:transform var(--dur-4) var(--ease-out); }
+.ig-cell__badge {
+  position:absolute; inset:auto .5rem .5rem auto;
+  display:grid; place-items:center; width:1.9rem; height:1.9rem;
+  border-radius:50%; background:rgba(11,11,12,.66); color:var(--ivory);
+  opacity:0; transition:opacity var(--dur-2) var(--ease);
+}
+.ig-cell__badge svg { width:1rem; height:1rem; }
+@media (hover:hover){
+  .ig-cell:hover { border-color:var(--gold-a40); transform:translateY(-3px); }
+  .ig-cell:hover img { transform:scale(1.07); }
+  .ig-cell:hover .ig-cell__badge { opacity:1; }
+}
+@media (hover:none){ .ig-cell__badge { opacity:1; } }
 
 /* ---------------------------------------------------------------- footer - */
 .site-footer { background:var(--ink-850); border-top:1px solid var(--ink-600); padding-block:var(--sp-8) var(--sp-6); }
