@@ -4,8 +4,8 @@ A mobile-first website for **Gallery Barbers**, Stall 10–11, Leeds Kirkgate Ma
 Leeds LS2 7HJ.
 
 Plain HTML, CSS and JavaScript. No build step, no framework, no npm install — open
-`index.html` and it runs. Total page weight on first load is roughly **190 KB**
-including the hero photograph.
+`index.html` and it runs. First load is about **165 KB** over the wire (gzipped HTML/CSS/JS plus the hero
+photograph); everything else is lazy-loaded.
 
 ---
 
