@@ -1,17 +1,12 @@
 # Publishes the site to GitHub Pages on every push to main.
-# Enable once: repo Settings > Pages > Source: "GitHub Actions".
+#
+# One-time setup: repo Settings > Pages > Source: "GitHub Actions".
+# The repo must be public, or on a plan that allows Pages from private repos.
 name: Deploy to GitHub Pages
 
-# While the repo is PRIVATE, Pages publishing needs a paid GitHub plan, so this
-# runs on demand only — otherwise every push would leave a failed red run.
-#
-# Once the repo is public (or you're on a plan that allows private Pages):
-#   1. Settings > Pages > Source: "GitHub Actions"
-#   2. uncomment the two `push:` lines below
-# and it will publish on every push to main again.
 on:
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -32,10 +27,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Static site - nothing to build, upload the repo as-is.
+      # Publish only what the website needs. The photo originals in
+      # source-photos/, the build scripts and the React component stay in the
+      # repo but are deliberately kept off the public site.
+      - name: Assemble the published site
+        run: |
+          mkdir -p dist
+          cp index.html privacy.html cookies.html terms.html dist/
+          cp robots.txt sitemap.xml dist/
+          cp -r assets dist/
+          touch dist/.nojekyll
+          echo "Published files:" && find dist -type f | wc -l
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
