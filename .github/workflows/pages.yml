@@ -2,9 +2,16 @@
 # Enable once: repo Settings > Pages > Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 
+# While the repo is PRIVATE, Pages publishing needs a paid GitHub plan, so this
+# runs on demand only — otherwise every push would leave a failed red run.
+#
+# Once the repo is public (or you're on a plan that allows private Pages):
+#   1. Settings > Pages > Source: "GitHub Actions"
+#   2. uncomment the two `push:` lines below
+# and it will publish on every push to main again.
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 permissions:
