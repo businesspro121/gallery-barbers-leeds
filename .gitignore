@@ -1,0 +1,26 @@
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node, if tooling is ever added
+node_modules/
+npm-debug.log*
+
+# Python, for the scripts in tools/
+__pycache__/
+*.pyc
+.venv/
+
+# Style-reference collages that were supplied but are NOT the shop's own work
+# (5.png contains celebrity press photography). Kept locally so they are not
+# lost, deliberately never committed or published.
+source-photos/_unlicensed-do-not-publish/
+
+# Claude Code local dev config
+.claude/

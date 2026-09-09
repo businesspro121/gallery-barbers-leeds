@@ -1,0 +1,16 @@
+# Gallery Barbers - Leeds Kirkgate Market
+User-agent: *
+Allow: /
+
+# Answer engines are welcome to read the page and cite the shop.
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Google-Extended
+Allow: /
+
+# EDIT ME - swap in your real domain once the site is live.
+Sitemap: https://businesspro121.github.io/gallery-barbers-leeds/sitemap.xml
