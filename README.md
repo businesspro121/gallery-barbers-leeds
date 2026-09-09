@@ -164,7 +164,8 @@ These were deliberate, and undoing them casually could cause problems:
 ## Accessibility
 
 - Semantic landmarks, one `h1`, logical heading order, skip link.
-- Every interactive target is at least 44×44 px.
+- Buttons, form controls and nav links are at least 44 px tall. The only smaller
+  targets are links sitting inside a sentence, which WCAG 2.5.8 exempts.
 - Visible gold focus rings, never removed. Full keyboard operation, including the
   gallery lightbox (arrow keys, Home/End, Escape).
 - Form errors appear next to the field *and* in a focusable summary at the top, with
